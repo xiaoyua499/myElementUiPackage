@@ -5,6 +5,9 @@ import store from './store'
 //引入elementui
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+
+import Drawer from '@/components/common/Drawer/index';
+Vue.prototype.$Drawer = Drawer
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 
