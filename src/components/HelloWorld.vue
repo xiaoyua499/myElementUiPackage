@@ -8,20 +8,15 @@
 
 export default {
   name: 'HelloWorld',
-  methods:{
-    openDrawer(){
-      this.$Drawer.open({
-        direction:'rtl',
-        onClose:()=>{
-          console.log(123);
-        },
-        component: ()=>import('./common/123.vue'),
-        params:{
-          
+  methods: {
+    openDrawer() {
+      this.$drawer.open(
+        {
+          direction: 'ltr',
+          component: () => require('./common/123.vue'),
+          params: {}
         }
-      }).then(res=>{
-        console.log(res);
-      })
+      )
     }
   }
 }
@@ -32,14 +27,17 @@ export default {
 h3 {
   margin: 40px 0 0;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
 }
+
 li {
   display: inline-block;
   margin: 0 10px;
 }
+
 a {
   color: #42b983;
 }

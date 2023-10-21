@@ -11,8 +11,9 @@ data(){
 },
 methods:{
   close(){
-    console.log(this);
-    this.$root.onClose(123)
+    this.$drawer.close(this.$parent.id,()=>{
+      console.log(this.$parent.id,'关闭了');
+    })
   }
 }
 }

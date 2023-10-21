@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import DrawerComp from './index.vue';
 import { PopupManager } from 'element-ui/lib/utils/popup'
-let instance;
+
 let instances = []
 let seed = 1;
 const DrawerCtor = Vue.extend(DrawerComp);
 const Drawer = async function (props = {}, comp = {}) {
+  let instance;
   if (Vue.prototype.$isServer) return;
   if (typeof props === 'string') {
     props = {
@@ -16,12 +17,7 @@ const Drawer = async function (props = {}, comp = {}) {
   instance = new DrawerCtor({
     propsData: props
   });
-  let userOnClose = props.onClose;
   let id = 'drawer_' + seed++;
-
-  props.onClose = function () {
-    Message.close(id, userOnClose);
-  };
   if (comp.component) {
     let component = typeof comp.component == 'function' ? (await comp.component()).default : comp.DrawerComp
     let defaultComponent = instance.$createElement(component, {
@@ -36,9 +32,11 @@ const Drawer = async function (props = {}, comp = {}) {
   instance.$mount();
   instance.drawer = true;
   instance.direction = props.direction;
-  document.body.appendChild(instance.$el);
+  // const appDom=document.querySelector('#app')
+  // appDom.appendChild(instance.$el);
+  document.body.appendChild(instance.$el)
   instance.$el.style.zIndex = PopupManager.nextZIndex()
-  console.log(instance);
+  // instance.$children[0].$el.style.width ='30%'
   instances.push(instance)
   return new Promise((resolve, reject) => {
     instance.$off('on-close').$on('on-closed', (res) => {
@@ -59,25 +57,63 @@ Drawer.open = function (options) {
   options.direction = options.direction || 'rtl'
   return Drawer(options, { component, params });
 };
+
+/**
+ * 打开多个抽屉。
+ *
+ * @param {Array} drawerOptions - 包含抽屉选项对象的数组。
+ *
+ * @param {string} drawerOptions[].direction - 抽屉弹出的位置（'rtl' 或 'ltr'）。
+ *
+ * @param {Function} drawerOptions[].component - 要传入的组件。
+ *
+ * @param {Object} drawerOptions[].params - 传入组件的参数。
+ *
+ * @param {Array} drawerOptions - 包含抽屉选项对象的数组。
+ *
+ * @example
+ * const options1 = {
+ *   direction: 'rtl',
+ *   component: () => require('../123.vue'),
+ *   params: {}
+ * };
+ * const options2 = {
+ *   direction: 'ltr',
+ *   component: () => require('../123.vue'),
+ *   params: {}
+ * };
+ *
+ * // 调用示例
+ * Drawer.doubleOpen([options1, options2]);
+ */
+Drawer.doubleOpen = function (drawerOptions) {
+  if (!Array.isArray(drawerOptions)) return
+
+  drawerOptions.forEach((options) => {
+    Drawer.open(options);
+  });
+};
 Drawer.close = function (id, userOnClose) {
-  let len = instances.length
-  let index = -1
-  let removedHeight
-  for (let i = 0; i < len.length; i++) {
-    if (id === instances[i].id) {
-      removedHeight = instances[i].$el.offsetHeight
-      index = i
-      if (typeof userOnClose === 'function') {
-        userOnClose(instances[i])
-      }
-      instances.splice(i, 1)
-      break
+  const index = instances.findIndex((inst) => inst.id === id);
+
+  if (index !== -1) {
+    const instance = instances[index];
+
+    if (typeof userOnClose === 'function') {
+      userOnClose(instance);
     }
+    instance.$el.parentNode.removeChild(instance.$el);
+    instances.splice(index, 1);
   }
-  if(len<=1||index===-1||index>instances.length-1) return
-  for(let i =index;i<len-1;i++){
-    let dom = instances[i].$el
-    dom.style['top']=parseInt(dom.style['top'],10)-removedHeight-16+'px'
+};
+
+Drawer.closeAll = function () {
+  for (let i = instances.length - 1; i >= 0; i--) {
+    const instance = instances[i];
+    if (instance.$el && instance.$el.parentNode) {
+      instance.$el.parentNode.removeChild(instance.$el);
+      instance.close();
+    }
   }
 }
 
