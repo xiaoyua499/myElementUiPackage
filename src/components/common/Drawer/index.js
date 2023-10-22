@@ -102,7 +102,7 @@ Drawer.close = function (id, userOnClose) {
     if (typeof userOnClose === 'function') {
       userOnClose(instance);
     }
-    instance.$el.parentNode.removeChild(instance.$el);
+    instance.closeDrawer()
     instances.splice(index, 1);
   }
 };
@@ -111,8 +111,7 @@ Drawer.closeAll = function () {
   for (let i = instances.length - 1; i >= 0; i--) {
     const instance = instances[i];
     if (instance.$el && instance.$el.parentNode) {
-      instance.$el.parentNode.removeChild(instance.$el);
-      instance.close();
+      instance.closeDrawer();
     }
   }
 }
