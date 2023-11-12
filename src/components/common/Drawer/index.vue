@@ -58,15 +58,49 @@ export default {
     afterLeave() {
       this.$emit('closed');
     },
-    close() {
-      this.drawer = false
-      this.$el.parentNode.removeChild(this.$el);
+    close(options) {
+      const defaultOptions = {
+        confirm: false,
+        success: true,
+        successMsg: '保存成功'
+      }
+      const { confirm , success , successMsg }={...defaultOptions ,...options }
+      if (confirm) {
+        return new Promise((resolve, reject) => {
+          this.$confirm('是否保存', '系统提示', {
+            confirmButtonText: '提交',
+            cancelButtonText: '取消',
+            customClass: 'myMessage'
+          }).then(() => {
+            if (success) {
+              this.$message({
+                type: 'success',
+                message: successMsg
+              });
+            }
+            this.drawer = false;
+            setTimeout(() => {
+              this.$el.parentNode.removeChild(this.$el);
+            }, 300)
+            resolve(true); // 表示成功关闭抽屉
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '取消'
+            });
+            resolve(false); // 表示取消关闭抽屉
+          });
+        });
+      } else {
+        this.drawer = false
+        setTimeout(() => {
+          this.$el.parentNode.removeChild(this.$el);
+        }, 300)
+      }
+
     },
-    closeDrawer() {
-      this.drawer = false
-      setTimeout(() => {
-        this.close()
-      }, 300)
+    closeDrawer(data) {
+      this.close(data)
     },
   },
   mounted() {
@@ -175,10 +209,12 @@ export default {
       background-color: transparent;
     }
   }
-  .drawer-body{
+
+  .drawer-body {
     flex: 1;
     overflow: auto;
-    & > * {
+
+    &>* {
       box-sizing: border-box;
     }
   }
