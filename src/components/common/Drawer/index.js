@@ -4,7 +4,9 @@ import { PopupManager } from 'element-ui/lib/utils/popup'
 
 let instances = []
 let seed = 1;
+
 const DrawerCtor = Vue.extend(DrawerComp);
+
 const Drawer = async function (props = {}, comp = {}) {
   let instance;
   if (Vue.prototype.$isServer) return;
@@ -49,6 +51,16 @@ const Drawer = async function (props = {}, comp = {}) {
   })
 };
 
+/**
+ * 打开一个抽屉并渲染指定组件，同时可以传递参数和自定义选项。
+ *
+ * @param {object} options - 抽屉的配置选项，包括组件、参数等。
+ * @param {object} options.component - 要渲染在抽屉中的组件。
+ * @param {object} [options.params] - 可选的参数，传递给渲染的组件。
+ * @param {string} [options.direction='rtl'] - 抽屉的打开方向，默认为右至左 (rtl)。
+ *
+ * @returns {Drawer} - 返回抽屉实例，可用于后续操作。
+ */
 Drawer.open = function (options) {
   let component = options.component
   delete options.component
@@ -93,6 +105,12 @@ Drawer.doubleOpen = function (drawerOptions) {
     Drawer.open(options);
   });
 };
+/**
+ * 关闭指定抽屉实例并执行用户自定义的关闭回调。
+ *
+ * @param {string} id - 要关闭的抽屉实例的唯一标识符。
+ * @param {function} userOnClose - 用户自定义的关闭回调函数。可选参数。
+ */
 Drawer.close = function (id, userOnClose) {
   const index = instances.findIndex((inst) => inst.id === id);
 
@@ -106,12 +124,23 @@ Drawer.close = function (id, userOnClose) {
     instances.splice(index, 1);
   }
 };
+//关闭所有抽屉
+Drawer.closeAll = async function (options={}) {
+  if (instances.length>0){
+    const closePromises = [];
+    for (let i = instances.length - 1; i >= 0; i--) {
+      const instance = instances[i];
+      if (instance.$el && instance.$el.parentNode) {
+        const closePromise = instance.close(options);
+        closePromises.push(closePromise);
+      }
+    }
 
-Drawer.closeAll = function () {
-  for (let i = instances.length - 1; i >= 0; i--) {
-    const instance = instances[i];
-    if (instance.$el && instance.$el.parentNode) {
-      instance.closeDrawer();
+    try {
+      await Promise.all(closePromises);
+      return true; // 所有抽屉都成功关闭
+    } catch (error) {
+      return false; // 有一个或多个抽屉无法成功关闭
     }
   }
 }
