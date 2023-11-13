@@ -125,13 +125,6 @@ Drawer.close = function (id, userOnClose) {
   }
 };
 //关闭所有抽屉
-<<<<<<< HEAD
-Drawer.closeAll = function () {
-  for (let i = instances.length - 1; i >= 0; i--) {
-    const instance = instances[i];
-    if (instance.$el && instance.$el.parentNode) {
-      instance.closeDrawer();
-=======
 Drawer.closeAll = async function (options={}) {
   if (instances.length>0){
     const closePromises = [];
@@ -148,7 +141,6 @@ Drawer.closeAll = async function (options={}) {
       return true; // 所有抽屉都成功关闭
     } catch (error) {
       return false; // 有一个或多个抽屉无法成功关闭
->>>>>>> drawer
     }
   }
 }
