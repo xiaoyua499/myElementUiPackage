@@ -13,12 +13,12 @@ export default {
       this.$drawer.open(
         {
           direction: 'ltr',
-          title:'标题',
-          // component: () => require('./common/123.vue'),
+          title: '标题',
+          component: () => require('../components/test.vue'),
           params: {}
         }
       )
-    }
+    },
   }
 }
 </script>
