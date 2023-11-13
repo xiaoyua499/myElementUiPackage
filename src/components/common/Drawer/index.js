@@ -141,7 +141,6 @@ Drawer.closeAll = async function (options={}) {
       return true; // 所有抽屉都成功关闭
     } catch (error) {
       return false; // 有一个或多个抽屉无法成功关闭
-
     }
   }
 }
