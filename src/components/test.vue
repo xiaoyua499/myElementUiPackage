@@ -1,15 +1,14 @@
 <template>
-  <el-button @click="close">关闭</el-button>
+  <form></form>
 </template>
 
 <script>
+import form from './common/Form/index.vue'
 export default {
+  components:{
+    form
+  },
 methods:{
-  close(){
-    this.$drawer.closeAll({ 
-      confirm :true,
-    })
-  }
 }
 }
 </script>
