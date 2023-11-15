@@ -1,46 +1,24 @@
 <!-- Input.vue -->
 <template>
-  <el-input class="input" v-model="localModel" :disabled="disabled" :placeholder="placeholder" :rules="rules"
-    @blur="handleBlur" ref="input">
-  </el-input>
+  <el-input v-model="value" :disabled="disabled" :placeholder="placeholder" @blur="handleBlur"></el-input>
 </template>
 
 <script>
 export default {
   props: {
-    model: {
-      type: [String, Number],
-      required: true,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
+    value: String,
+    disabled: Boolean,
     placeholder: String,
-    rules: Array,
   },
   data() {
     return {
-      localModel: this.model,
+      localValue: this.value, // 将 prop 的值赋给本地的 data 属性
     };
-  },
-  watch: {
-    model(newVal) {
-      // 当父组件传递的 model 发生变化时更新本地的 localModel
-      this.localModel = newVal;
-    },
   },
   methods: {
     handleBlur() {
-      // 使用 Element UI 的表单校验方法
-      this.$nextTick(() => {
-        this.$parent.$refs.form.validate((valid, error) => {
-          if (!valid) {
-            // 处理校验失败的逻辑
-            console.error(error);
-          }
-        });
-      });
+      // 这里可以添加其他处理逻辑
+      this.$emit("blur", this.value);
     },
   },
 };
