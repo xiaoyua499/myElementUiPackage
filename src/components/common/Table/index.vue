@@ -39,7 +39,7 @@
         </tr>
       </tbody>
     </table>
-    <div style="width: 100%; text-align: center;">
+    <div style="width: 100%; text-align: center;" v-if="insertOrDelete">
       <el-button class="bottom-btn" @click="addBtn">+</el-button>
     </div>
   </div>
