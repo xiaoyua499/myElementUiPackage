@@ -5,7 +5,7 @@
         <th
           v-for="(header, index) in headers"
           :key="index"
-          :style="{width:`${100/headers.length}%`}"
+          :style="{width:`${100/(headers.length)}%`}"
         >{{ header.name }}</th>
       </tr>
     </thead>
@@ -19,7 +19,7 @@
         @mouseleave="tableMouseLeave(row,rowIndex,$event)"
       >
         <template v-for="(cell, key) in row">
-          <td :style="{width:`${100/tableData.length}%`}" v-if="key!=='type'">
+          <td v-if="key!=='type'">
             <el-input
               class="my-table-input"
               type="textarea"
@@ -113,14 +113,36 @@ export default {
   .my-table-row {
     min-height: 32px;
     &.inser {
+      position: relative;
       height: 5px;
-      td{
+      td {
         border-bottom: 1px solid blue;
         border-top: 1px solid blue;
       }
-      .my-table-input{
+      .my-table-input {
         display: none;
       }
+      // &::before,
+      // &::after {
+      //   content: "";
+      //   position: absolute;
+      //   top: 0;
+      //   right: 0;
+      //   width: 20px;
+      //   height: 20px;
+      //   // background-size: contain;
+      // }
+      // &::before {
+      //   content: "+";
+      //   font-size: 20px;
+      //   color: green;
+      // }
+
+      // &::after {
+      //   content: "-";
+      //   font-size: 20px;
+      //   color: red;
+      // }
     }
     .my-table-input::v-deep {
       .el-textarea__inner {
