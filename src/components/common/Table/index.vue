@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 10px;">
+  <div style="padding: 10px;" class="table-container">
     <table class="custom-table">
       <thead class="my-table-thead">
         <tr class="my-table-header">
@@ -39,6 +39,9 @@
         </tr>
       </tbody>
     </table>
+    <div style="width: 100%; text-align: center;">
+      <el-button class="bottom-btn" @click="addBtn">+</el-button>
+    </div>
   </div>
 </template>
 
@@ -108,6 +111,9 @@ export default {
     },
     delRow(rowIndex) {
       this.tableData.splice(rowIndex, 1);
+    },
+    addBtn(){
+      this.tableData.push({})
     }
   },
   mounted() {
@@ -117,61 +123,66 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.custom-table {
-  width: 100%;
-  border: 1px solid #dee0e3;
-  border-collapse: collapse;
-  border-spacing: 0;
-  th,
-  td {
-    padding: 0;
-    border: 1px solid #dee0e3;
-    text-align: center;
-    font-size: 16px;
-    line-height: 32px;
-    color: #333;
-  }
-  .my-table-thead {
+.table-container {
+  .custom-table {
     width: 100%;
-    .my-table-header {
-      width: 100%;
-      height: 32px;
-      background-color: #0047d61a;
+    border: 1px solid #dee0e3;
+    border-collapse: collapse;
+    border-spacing: 0;
+    th,
+    td {
+      padding: 0;
+      border: 1px solid #dee0e3;
+      text-align: center;
+      font-size: 16px;
+      line-height: 32px;
+      color: #333;
     }
-  }
-  .my-table-row {
-    position: relative;
-    min-height: 32px;
-    .my-table-input::v-deep {
-      .el-textarea__inner {
+    .my-table-thead {
+      width: 100%;
+      .my-table-header {
         width: 100%;
-        border: none;
+        height: 32px;
+        background-color: #0047d61a;
+      }
+    }
+    .my-table-row {
+      position: relative;
+      min-height: 32px;
+      .my-table-input::v-deep {
+        .el-textarea__inner {
+          width: 100%;
+          border: none;
+        }
       }
     }
   }
-}
-/* 添加一些样式来设置加号图标的外观 */
-.add-row,
-.del-row {
-  border: 1px solid;
-  height: 10px;
-  border-radius: 5px;
-  /* width: 10px; */
-  line-height: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  z-index: 9;
-}
-.add-row {
-  position: absolute;
-  bottom: -5px;
-  right: -4px;
-  color: green;
-}
-.del-row {
-  position: absolute;
-  top: -5px;
-  right: -4px;
-  color: red;
+  /* 添加一些样式来设置加号图标的外观 */
+  .add-row,
+  .del-row {
+    border: 1px solid;
+    height: 10px;
+    border-radius: 5px;
+    /* width: 10px; */
+    line-height: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 9;
+  }
+  .add-row {
+    position: absolute;
+    bottom: -5px;
+    right: -4px;
+    color: green;
+  }
+  .del-row {
+    position: absolute;
+    top: -5px;
+    right: -4px;
+    color: red;
+  }
+  .bottom-btn{
+    margin: 0 auto;
+  }
 }
 </style>
