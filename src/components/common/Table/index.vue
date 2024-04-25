@@ -1,37 +1,44 @@
 <template>
-  <table class="custom-table">
-    <thead class="my-table-thead">
-      <tr class="my-table-header">
-        <th
-          v-for="(header, index) in headers"
-          :key="index"
-          :style="{width:`${100/(headers.length)}%`}"
-        >{{ header.name }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        class="my-table-row"
-        v-for="(row, rowIndex) in tableData"
-        :key="rowIndex"
-        :class="row.type"
-        @mouseenter="tableMouseEnter(row,rowIndex,$event)"
-        @mouseleave="tableMouseLeave(row,rowIndex,$event)"
-      >
-        <template v-for="(cell, key) in row">
-          <td v-if="key!=='type'">
-            <el-input
-              class="my-table-input"
-              type="textarea"
-              v-model="tableData[rowIndex][key]"
-              resize="none"
-              autosize
-            ></el-input>
+  <div style="padding: 10px;">
+    <table class="custom-table">
+      <thead class="my-table-thead">
+        <tr class="my-table-header">
+          <th
+            v-for="(header, index) in headers"
+            :key="index"
+            :style="{width:`${100/(headers.length)}%`}"
+          >{{ header.name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="my-table-row"
+          v-for="(row, rowIndex) in tableData"
+          :key="rowIndex"
+          :class="row.type"
+          @mouseenter="tableMouseEnter(row, rowIndex, $event)"
+          @mouseleave="tableMouseLeave(row, rowIndex, $event)"
+        >
+          <template v-for="(cell, key) in row">
+            <td >
+              <el-input
+                class="my-table-input"
+                type="textarea"
+                v-model="tableData[rowIndex][key]"
+                resize="none"
+                autosize
+              ></el-input>
+            </td>
+          </template>
+          <!-- 插入/删除行功能 -->
+          <td v-if="insertOrDelete">
+            <span v-if="rowIndex===showBtnRow" class="add-row" @click="addRow(rowIndex)">+</span>
+            <!-- <span class="add-row" @click="addRow(rowIndex)">+</span> -->
           </td>
-        </template>
-      </tr>
-    </tbody>
-  </table>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -46,6 +53,11 @@ export default {
       type: Array,
       require: true
     },// 表格数据数组
+    //是都启用插入/删除行功能
+    insertOrDelete:{
+      type:Boolean,
+      default:false
+    }
   },
   watch: {
     tableData() {
@@ -54,11 +66,13 @@ export default {
   },
   data() {
     return {
-      myTableData: [],
+      showBtnRow: null,//显示插入和删除的行数
     }
   },
   methods: {
+    //初始化表格数据
     init() {
+      //当行的数据为空时,自动创建和表头对应的对象数据
       let headerArr = []
       this.headers.forEach(header => {
         headerArr.push(header.id)
@@ -74,12 +88,23 @@ export default {
         }
       }
     },
-    tableMouseEnter(row, index, event) {
-      this.$emit('row-mouse-enter', row, index, event)
+    //鼠标移入行
+    tableMouseEnter(row, rowIndex, event) {
+      // 当鼠标移入表格行时显示加号图标
+      this.showBtnRow=rowIndex
+      this.$emit('row-mouse-enter', row, rowIndex, event)
     },
-    tableMouseLeave(row, index, event) {
-      this.$emit('row-mouse-leave', row, index, event)
-    }
+    //鼠标移出行
+    tableMouseLeave(row, rowIndex, event) {
+      this.showBtnRow=null
+      this.$emit('row-mouse-leave', row, rowIndex, event)
+    },
+    //插入行
+    addRow(rowIndex) {
+      // 在指定位置添加一行
+      const newRow = {};
+      this.tableData.splice(rowIndex + 1, 0, newRow);
+    },
   },
   mounted() {
     this.init()
@@ -111,6 +136,7 @@ export default {
     }
   }
   .my-table-row {
+    position: relative;
     min-height: 32px;
     &.inser {
       position: relative;
@@ -125,11 +151,11 @@ export default {
       // &::before,
       // &::after {
       //   content: "";
-      //   position: absolute;
-      //   top: 0;
-      //   right: 0;
-      //   width: 20px;
-      //   height: 20px;
+      //   // position: absolute;
+      //   // top: 0;
+      //   // right: 0;
+      //   // width: 20px;
+      //   // height: 20px;
       //   // background-size: contain;
       // }
       // &::before {
@@ -151,5 +177,20 @@ export default {
       }
     }
   }
+}
+/* 添加一些样式来设置加号图标的外观 */
+.add-row {
+  border: 1px solid;
+  height: 10px;
+  border-radius: 5px;
+  /* width: 10px; */
+  line-height: 8px;
+  position: absolute;
+  bottom: -5px;
+  right: -4px;
+  cursor: pointer;
+  font-weight: bold;
+  color: green;
+  z-index: 9;
 }
 </style>
