@@ -20,7 +20,7 @@
           @mouseleave="tableMouseLeave(row, rowIndex, $event)"
         >
           <template v-for="(cell, key) in row">
-            <td >
+            <td>
               <el-input
                 class="my-table-input"
                 type="textarea"
@@ -33,6 +33,7 @@
           <!-- 插入/删除行功能 -->
           <td v-if="insertOrDelete">
             <span v-if="rowIndex===showBtnRow" class="add-row" @click="addRow(rowIndex)">+</span>
+            <span v-if="rowIndex===showBtnRow" class="del-row" @click="delRow(rowIndex)">-</span>
             <!-- <span class="add-row" @click="addRow(rowIndex)">+</span> -->
           </td>
         </tr>
@@ -54,9 +55,9 @@ export default {
       require: true
     },// 表格数据数组
     //是都启用插入/删除行功能
-    insertOrDelete:{
-      type:Boolean,
-      default:false
+    insertOrDelete: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -91,12 +92,12 @@ export default {
     //鼠标移入行
     tableMouseEnter(row, rowIndex, event) {
       // 当鼠标移入表格行时显示加号图标
-      this.showBtnRow=rowIndex
+      this.showBtnRow = rowIndex
       this.$emit('row-mouse-enter', row, rowIndex, event)
     },
     //鼠标移出行
     tableMouseLeave(row, rowIndex, event) {
-      this.showBtnRow=null
+      this.showBtnRow = null
       this.$emit('row-mouse-leave', row, rowIndex, event)
     },
     //插入行
@@ -105,6 +106,9 @@ export default {
       const newRow = {};
       this.tableData.splice(rowIndex + 1, 0, newRow);
     },
+    delRow(rowIndex) {
+      this.tableData.splice(rowIndex, 1);
+    }
   },
   mounted() {
     this.init()
@@ -138,38 +142,6 @@ export default {
   .my-table-row {
     position: relative;
     min-height: 32px;
-    &.inser {
-      position: relative;
-      height: 5px;
-      td {
-        border-bottom: 1px solid blue;
-        border-top: 1px solid blue;
-      }
-      .my-table-input {
-        display: none;
-      }
-      // &::before,
-      // &::after {
-      //   content: "";
-      //   // position: absolute;
-      //   // top: 0;
-      //   // right: 0;
-      //   // width: 20px;
-      //   // height: 20px;
-      //   // background-size: contain;
-      // }
-      // &::before {
-      //   content: "+";
-      //   font-size: 20px;
-      //   color: green;
-      // }
-
-      // &::after {
-      //   content: "-";
-      //   font-size: 20px;
-      //   color: red;
-      // }
-    }
     .my-table-input::v-deep {
       .el-textarea__inner {
         width: 100%;
@@ -179,18 +151,27 @@ export default {
   }
 }
 /* 添加一些样式来设置加号图标的外观 */
-.add-row {
+.add-row,
+.del-row {
   border: 1px solid;
   height: 10px;
   border-radius: 5px;
   /* width: 10px; */
   line-height: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 9;
+}
+.add-row {
   position: absolute;
   bottom: -5px;
   right: -4px;
-  cursor: pointer;
-  font-weight: bold;
   color: green;
-  z-index: 9;
+}
+.del-row {
+  position: absolute;
+  top: -5px;
+  right: -4px;
+  color: red;
 }
 </style>
