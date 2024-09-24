@@ -8,7 +8,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 //全局引用抽屉组件
 import Drawer from '@/components/common/Drawer/index';
+import pLoading from '@/components/common/ProgressLoading/index.js';
 Vue.prototype.$drawer = Drawer
+Vue.prototype.$ploading = pLoading
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 

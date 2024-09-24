@@ -1,11 +1,10 @@
 <template>
   <div class="home">
-    <test/>
+    <test :vRadio="vRadio" @changeRadio="changeRadio"/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 import test from '@/components/test.vue'
 
@@ -14,6 +13,17 @@ export default {
   components: {
     HelloWorld,
     test
+  },
+  data(){
+    return{
+      vRadio:1
+    }
+  },
+  methods: {
+    changeRadio(value){
+      this.vRadio = value
+      console.log('选项',this.vRadio);
+    }
   }
 }
 </script>

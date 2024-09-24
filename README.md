@@ -62,7 +62,7 @@ this.$drawer.close(id, userOnClose)
 this.$drawer.closeAll()
 ```
 
-## 表单组件使用方法
+# Form组件
 
 ### 1. 导入组件
 
@@ -203,3 +203,73 @@ export default {
 };
 </script>
 ```
+
+# Table组件
+
+组件可以配置是否开启插入/删除当前行的功能，`:insertOrDelete="true"`启用
+
+## 1.Table配置项
+
+| 参数           | 说明                   | 类型    | 可选值 | 默认值 |
+| :------------- | :--------------------- | :------ | :----- | :----- |
+| headers        | 表头列表               | array   | —      | —      |
+| tableData      | 表格数据               | array   | —      | —      |
+| insertOrDelete | 启用表格插入、删除功能 | boolean | —      | false  |
+
+## 2.Tbale事件
+
+| 事件名          | 说明               | 参数                 |
+| :-------------- | :----------------- | :------------------- |
+| row-mouse-enter | 当鼠标移入行时触发 | row, rowIndex, event |
+| row-mouse-leave | 当鼠标移出行时触发 | row, rowIndex, event |
+
+## 3.导入组件
+
+```vue
+<template>
+  <MyTable
+    :headers="headers"
+    :tableData="tableData"
+    :insertOrDelete="true"
+  ></MyTable>
+</template>
+
+<script>
+import MyTable from './common/Table/index.vue'
+export default {
+  components: {
+    MyTable
+  },
+  data() {
+    return {
+      headers: [
+        {
+          id: 1,
+          name: '列1'
+        },
+        {
+          id: 2,
+          name: '列2'
+        }
+      ],
+      tableData: [
+        {
+          '1': 123123,
+          '2': 123123
+        },
+        {
+          '1': 123123,
+          '2': 123123
+        }
+      ],
+    }
+  },
+  methods: {
+  }
+}
+</script>
+
+<style>
+</style>
+```
+
