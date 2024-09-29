@@ -17,9 +17,9 @@ yarn build
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-## Drawer组件
+# Drawer组件
 
-在main.js中通过全局引入的方式引入抽屉组件
+## 1.在main.js中通过全局引入的方式引入抽屉组件
 
 ```vue
 //全局引用抽屉组件
@@ -27,7 +27,7 @@ import Drawer from '@/components/common/Drawer/index';
 Vue.prototype.$drawer = Drawer
 ```
 
-调用示例
+## 2.调用示例
 
 ```js
 //打开单个抽屉
@@ -271,5 +271,77 @@ export default {
 
 <style>
 </style>
+```
+
+# ProgressLoading（进度条loading）组件
+
+## 1.在main.js中通过全局引入的方式引入抽屉组件
+
+```js
+import pLoading from '@/components/common/ProgressLoading/index.js';
+Vue.prototype.$ploading = pLoading
+```
+
+## 2.配置项
+
+| 参数            | 说明                       | 类型    | 可选值 | 默认值 |
+| :-------------- | :------------------------- | :------ | :----- | :----- |
+| width           | 进度条长度                 | string  | —      | 100%   |
+| percentage      | 当前进度                   | string  | —      | 0      |
+| progressColor   | 进度条颜色                 | string  | —      | -      |
+| showText        | 是否显示进度文本           | boolean | -      | true   |
+| background      | loading背景颜色            | string  | -      | -      |
+| stateText       | 进度条状态提示             | string  | -      | -      |
+| stateTextStyle  | 进度条状态提示文本样式     | object  | -      | -      |
+| isShowStateText | 是否显示进度条状态提示文本 | boolean | -      | true   |
+
+## 3.调用示例
+
+```vue
+<template>
+  <div style="width: 30%;margin: 0 auto;">
+    <el-button type="primary" @click="onClick">主要按钮</el-button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'dome',
+  data() {
+    return {
+      percentage: 0,
+      text: ''
+    };
+  },
+  methods: {
+    onClick() {
+      const ploading = this.$ploading({
+        background: 'rgba(255, 255, 255, 0.8)',
+        width: '50%',
+        stateText: '加载中...',
+        stateTextStyle: {
+          color: '#ccc',
+          fontSize: '20px',
+        },
+        showText:false
+      });
+     setInterval(() => {
+        this.percentage += 10;
+        this.text = '加载中...'
+        if (this.percentage > 100) {
+          this.percentage = 100;
+          this.text = '已完成!!!'
+          setTimeout(()=>{
+            //当进度达到100%时关闭loading
+             ploading.close()
+          },100)
+        }
+       //改变进度条进度和提示文本
+        ploading.increase(this.percentage, this.text)
+      }, 1000);
+    },
+  }
+}
+</script>
 ```
 

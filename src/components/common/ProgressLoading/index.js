@@ -38,9 +38,9 @@ LoadingConstructor.prototype.close = function () {
   this.visible = false;
 };
 
-LoadingConstructor.prototype.increase = function (percentage,text) {
+LoadingConstructor.prototype.increase = function (percentage, stateText) {
   this.percentage = percentage;
-  this.text = text
+  this.stateText = stateText
 }
 
 const addStyle = (options, parent, instance) => {
