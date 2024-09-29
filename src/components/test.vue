@@ -72,13 +72,15 @@ export default {
         if (this.percentage > 100) {
           this.percentage = 100;
           this.text = '已完成!!!'
+          ploading.increase(this.percentage, this.text)
+          setTimeout(()=>{
+            ploading.close()
+          },1000)
+          clearInterval(time)
           time = null
-          // setTimeout(()=>{
-          //   ploading.close()
-          // },100)
         }
         ploading.increase(this.percentage, this.text)
-      }, 1000);
+      }, 500);
       // setTimeout(() => {
       //   ploading.close()
       // }, 5000)
